@@ -30,16 +30,43 @@ for url in url_list:
 
         titles_articles = driver.find_elements(By.CSS_SELECTOR, 'h4.css-2fgx4k')
         release_dates = driver.find_elements(By.CSS_SELECTOR, 'span.css-17ubb9w')
-        Categories = driver.find_elements(By.CSS_SELECTOR, 'p.css-myxawk')
+        categories = driver.find_elements(By.CSS_SELECTOR, 'p.css-myxawk')
         urls_articles = driver.find_elements(By.TAG_NAME, 'a')
 
         for i in range(0, len(titles_articles)):
+
             release_date = release_dates[i].text
+            today = date.today()
+
             if 'ago' in release_date:
-                release_date = str(date.today())
+                if today.month == 1:
+                    release_date = 'January ' + str(today.day)
+                if today.month == 2:
+                    release_date = 'February ' + str(today.day)
+                if today.month == 3:
+                    release_date = 'March ' + str(today.day)
+                if today.month == 4:
+                    release_date = 'April ' + str(today.day)
+                if today.month == 5:
+                    release_date = 'May ' + str(today.day)
+                if today.month == 6:
+                    release_date = 'June ' + str(today.day)
+                if today.month == 7:
+                    release_date = 'July ' + str(today.day)
+                if today.month == 8:
+                    release_date = 'August ' + str(today.day)
+                if today.month == 9:
+                    release_date = 'September ' + str(today.day)
+                if today.month == 10:
+                    release_date = 'October ' + str(today.day)
+                if today.month == 11:
+                    release_date = 'November ' + str(today.day)
+                if today.month == 12:
+                    release_date = 'December ' + str(today.day)
+
             data = {
                 'Date: ': release_date,
-                'Category:': Categories[i].text,
+                'Category:': categories[i].text,
                 'Title:': titles_articles[i].text,
                 'Url:': urls_articles[i].get_attribute('href')
             }
