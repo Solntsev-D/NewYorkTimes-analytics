@@ -21,7 +21,7 @@ for url in url_list:
         time.sleep(1)
 
         i = 0
-        while i < 2:
+        while i < 10:
             driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
             time.sleep(1)
             sm_button = driver.find_element(By.XPATH, '//*[@id="site-content"]/div/div[2]/div[2]/div/button')
@@ -32,7 +32,8 @@ for url in url_list:
         release_dates = driver.find_elements(By.CSS_SELECTOR, 'span.css-17ubb9w')
         categories = driver.find_elements(By.CSS_SELECTOR, 'p.css-myxawk')
         urls_articles = driver.find_elements(By.TAG_NAME, 'a')
-
+        
+        data = []
         for i in range(0, len(titles_articles)):
 
             release_date = release_dates[i].text
@@ -64,16 +65,17 @@ for url in url_list:
                 if today.month == 12:
                     release_date = 'December ' + str(today.day)
 
-            data = {
-                'Date: ': release_date,
-                'Category:': categories[i].text,
-                'Title:': titles_articles[i].text,
-                'Url:': urls_articles[i].get_attribute('href')
+            info = {
+                'Date': release_date,
+                'Category': categories[i].text,
+                'Title': titles_articles[i].text,
+                'Url': urls_articles[i].get_attribute('href')
             }
+            data.append(info)
 
-            filename = url_list[url] + '.json'
-            with open(filename, 'a') as f:
-                f.write(json.dumps(data, indent=4))
+        filename = url_list[url] + '.json'
+        with open(filename, 'a') as f:
+            f.write(json.dumps(data, indent=4))
 
     except Exception as ex:
         print(ex)
