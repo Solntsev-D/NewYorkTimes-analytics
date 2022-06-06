@@ -1,8 +1,44 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from datetime import date
+from datetime import datetime
 import json
 import time
+import pandas as pd
+import matplotlib.pyplot as plt
+%matplotlib inline
+
+plt.style.use('ggplot')
+
+def DateConversion(release_date):
+    months = {
+        "Jan": 1,
+        "Feb": 2,
+        "Mar": 3,
+        "Apr": 4,
+        "May": 5,
+        "June": 6,
+        "July": 7,
+        "Aug": 8,
+        "Sep": 9,
+        "Oct": 10,
+        "Nov": 11,
+        "Dec": 12
+        }
+
+    if "ago" in release_date or "now" in release_date:
+        release_date = str(date.today())
+        return release_date
+
+    else: 
+        for word in months:
+            if word in release_date:
+                month = months[word]
+                
+        day = [int(day) for day in str.split(release_date) if day.isdigit()]
+        
+        release_date = "2022" + "-" + str(month) + "-" + str(day[0])
+        return release_date
 
 url_list = {
     'https://www.nytimes.com/search?dropmab=true&query=&sections=World%7Cnyt%3A%2F%2Fsection%2F70e865b6-cc70-5181-84c9-8368b3a5c34b&sort=best': 'World',
@@ -11,21 +47,21 @@ url_list = {
     'https://www.nytimes.com/search?dropmab=true&query=&sections=Sports%7Cnyt%3A%2F%2Fsection%2F4381411b-670f-5459-8277-b181485a19ec&sort=best': 'Sports'
 }
 
-index = 0
 for url in url_list:
-    index += 1
     driver = webdriver.Chrome(executable_path=r"C:\PyProjects\NewYorkTimes-analytics\chromedriver\chromedriver.exe")
+    
     try:
         driver.get(url=url)
         driver.maximize_window()
         time.sleep(1)
 
         i = 0
-        while i < 10:
+        while i < 300:
             driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
             time.sleep(1)
             sm_button = driver.find_element(By.XPATH, '//*[@id="site-content"]/div/div[2]/div[2]/div/button')
             sm_button.click()
+            time.sleep(1)
             i = i+1
 
         titles_articles = driver.find_elements(By.CSS_SELECTOR, 'h4.css-2fgx4k')
@@ -36,34 +72,7 @@ for url in url_list:
         data = []
         for i in range(0, len(titles_articles)):
 
-            release_date = release_dates[i].text
-            today = date.today()
-
-            if 'ago' in release_date:
-                if today.month == 1:
-                    release_date = 'January ' + str(today.day)
-                if today.month == 2:
-                    release_date = 'February ' + str(today.day)
-                if today.month == 3:
-                    release_date = 'March ' + str(today.day)
-                if today.month == 4:
-                    release_date = 'April ' + str(today.day)
-                if today.month == 5:
-                    release_date = 'May ' + str(today.day)
-                if today.month == 6:
-                    release_date = 'June ' + str(today.day)
-                if today.month == 7:
-                    release_date = 'July ' + str(today.day)
-                if today.month == 8:
-                    release_date = 'August ' + str(today.day)
-                if today.month == 9:
-                    release_date = 'September ' + str(today.day)
-                if today.month == 10:
-                    release_date = 'October ' + str(today.day)
-                if today.month == 11:
-                    release_date = 'November ' + str(today.day)
-                if today.month == 12:
-                    release_date = 'December ' + str(today.day)
+            release_date = DateConversion(release_dates[i].text)
 
             info = {
                 'Date': release_date,
