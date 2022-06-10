@@ -4,9 +4,7 @@ from datetime import date
 from datetime import datetime
 import json
 import time
-import pandas as pd
-import matplotlib.pyplot as plt
-%matplotlib inline
+
 
 plt.style.use('ggplot')
 
