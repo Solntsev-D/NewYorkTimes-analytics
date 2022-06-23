@@ -5,7 +5,6 @@ from datetime import datetime
 import json
 import time
 
-
 plt.style.use('ggplot')
 
 def DateConversion(release_date): #Функция для преобразования даты к виду, который можно сделать типом datetime
